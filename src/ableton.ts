@@ -7,6 +7,8 @@
 import { EventEmitter } from "node:events";
 import { OSCClient, type OSCClientOptions, type OSCMessage } from "./osc.js";
 import { Song } from "./song.js";
+import { Track } from "./track.js";
+import { Scene } from "./scene.js";
 
 export interface Logger {
   log: (...args: unknown[]) => void;
@@ -164,6 +166,137 @@ export class Ableton extends EventEmitter<AbletonEvents> {
     ...args: (string | number | boolean)[]
   ): Promise<OSCMessage> {
     return this.client.query(address, ...args);
+  }
+
+  // ============ Tracks ============
+
+  /**
+   * Get a track by index
+   */
+  getTrack(trackId: number): Track {
+    return new Track(this.client, trackId);
+  }
+
+  /**
+   * Get all track names
+   */
+  async getTrackNames(): Promise<string[]> {
+    const res = await this.client.query("/live/song/get/track_names");
+    return res.args as string[];
+  }
+
+  /**
+   * Get number of tracks
+   */
+  async getNumTracks(): Promise<number> {
+    const res = await this.client.query("/live/song/get/num_tracks");
+    return res.args[0] as number;
+  }
+
+  /**
+   * Create a new MIDI track
+   */
+  createMidiTrack(index = -1): void {
+    this.client.send("/live/song/create_midi_track", index);
+  }
+
+  /**
+   * Create a new audio track
+   */
+  createAudioTrack(index = -1): void {
+    this.client.send("/live/song/create_audio_track", index);
+  }
+
+  /**
+   * Delete a track
+   */
+  deleteTrack(trackId: number): void {
+    this.client.send("/live/song/delete_track", trackId);
+  }
+
+  /**
+   * Duplicate a track
+   */
+  duplicateTrack(trackId: number): void {
+    this.client.send("/live/song/duplicate_track", trackId);
+  }
+
+  // ============ Scenes ============
+
+  /**
+   * Get a scene by index
+   */
+  getScene(sceneId: number): Scene {
+    return new Scene(this.client, sceneId);
+  }
+
+  /**
+   * Get all scene names
+   */
+  async getSceneNames(): Promise<string[]> {
+    const res = await this.client.query("/live/song/get/scene_names");
+    return res.args as string[];
+  }
+
+  /**
+   * Get number of scenes
+   */
+  async getNumScenes(): Promise<number> {
+    const res = await this.client.query("/live/song/get/num_scenes");
+    return res.args[0] as number;
+  }
+
+  /**
+   * Create a new scene
+   */
+  createScene(index = -1): void {
+    this.client.send("/live/song/create_scene", index);
+  }
+
+  /**
+   * Delete a scene
+   */
+  deleteScene(sceneId: number): void {
+    this.client.send("/live/song/delete_scene", sceneId);
+  }
+
+  /**
+   * Duplicate a scene
+   */
+  duplicateScene(sceneId: number): void {
+    this.client.send("/live/song/duplicate_scene", sceneId);
+  }
+
+  // ============ View ============
+
+  /**
+   * Get currently selected track index
+   */
+  async getSelectedTrack(): Promise<number> {
+    const res = await this.client.query("/live/view/get/selected_track");
+    return res.args[0] as number;
+  }
+
+  /**
+   * Set selected track
+   */
+  setSelectedTrack(trackId: number): void {
+    this.client.send("/live/view/set/selected_track", trackId);
+  }
+
+  /**
+   * Get currently selected scene index
+   */
+  async getSelectedScene(): Promise<number> {
+    const res = await this.client.query("/live/view/get/selected_scene");
+    return res.args[0] as number;
+  }
+
+  /**
+   * Set selected scene
+   */
+  setSelectedScene(sceneId: number): void {
+    this.client.send("/live/view/set/selected_scene", sceneId);
   }
 }
 
