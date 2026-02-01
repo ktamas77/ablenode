@@ -5,6 +5,17 @@
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
@@ -16,23 +27,32 @@
     "test": "npm run typecheck && npm run lint",
     "example": "tsx examples/basic.ts",
     "example:multi": "tsx examples/multi-instance.ts",
-    "prepare": "husky"
+    "prepare": "husky",
+    "prepublishOnly": "npm run test && npm run build"
   },
   "keywords": [
     "ableton",
+    "ableton-live",
     "live",
     "osc",
+    "opensoundcontrol",
     "music",
     "midi",
     "daw",
     "abletonosc",
+    "audio",
+    "production",
     "typescript"
   ],
   "author": "ktamas77",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ktamas77/ablenode"
+    "url": "git+https://github.com/ktamas77/ablenode.git"
+  },
+  "homepage": "https://github.com/ktamas77/ablenode#readme",
+  "bugs": {
+    "url": "https://github.com/ktamas77/ablenode/issues"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
