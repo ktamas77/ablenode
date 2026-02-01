@@ -25,6 +25,12 @@
  * const clip = track.getClip(0);
  * clip.fire();
  *
+ * // Work with clip slots
+ * const clipSlot = track.getClipSlot(0);
+ * if (await clipSlot.getHasClip()) {
+ *   clipSlot.fire();
+ * }
+ *
  * // Work with devices
  * const device = track.getDevice(0);
  * await device.setParameterValue(1, 0.5);
@@ -47,10 +53,22 @@ export {
 } from "./ableton.js";
 
 // Song
-export { Song, type SongState } from "./song.js";
+export {
+  Song,
+  ClipTriggerQuantization,
+  MidiRecordingQuantization,
+  RecordMode,
+  type SongState,
+  type CuePoint,
+} from "./song.js";
 
 // Track
-export { Track, type TrackState } from "./track.js";
+export {
+  Track,
+  MonitoringState,
+  type TrackState,
+  type ArrangementClip,
+} from "./track.js";
 
 // Clip
 export {
@@ -61,8 +79,11 @@ export {
   type Note,
 } from "./clip.js";
 
+// ClipSlot
+export { ClipSlot } from "./clip-slot.js";
+
 // Device
-export { Device, type DeviceParameter } from "./device.js";
+export { Device, DeviceType, type DeviceParameter } from "./device.js";
 
 // Scene
 export { Scene } from "./scene.js";

@@ -51,6 +51,7 @@ export class Clip {
   private client: OSCClient;
   readonly trackId: number;
   readonly id: number;
+  private positionListening = false;
 
   constructor(client: OSCClient, trackId: number, clipId: number) {
     this.client = client;
@@ -214,6 +215,200 @@ export class Clip {
     return res.args[2] as string;
   }
 
+  // ============ New Getters ============
+
+  /**
+   * Get the sample length (for audio clips)
+   */
+  async getSampleLength(): Promise<number> {
+    const res = await this.client.query(
+      "/live/clip/get/sample_length",
+      this.trackId,
+      this.id
+    );
+    return res.args[2] as number;
+  }
+
+  /**
+   * Get the start time of the clip
+   */
+  async getStartTime(): Promise<number> {
+    const res = await this.client.query(
+      "/live/clip/get/start_time",
+      this.trackId,
+      this.id
+    );
+    return res.args[2] as number;
+  }
+
+  /**
+   * Check if the clip is currently overdubbing
+   */
+  async getIsOverdubbing(): Promise<boolean> {
+    const res = await this.client.query(
+      "/live/clip/get/is_overdubbing",
+      this.trackId,
+      this.id
+    );
+    return res.args[2] as boolean;
+  }
+
+  /**
+   * Check if the clip will start recording when fired
+   */
+  async getWillRecordOnStart(): Promise<boolean> {
+    const res = await this.client.query(
+      "/live/clip/get/will_record_on_start",
+      this.trackId,
+      this.id
+    );
+    return res.args[2] as boolean;
+  }
+
+  /**
+   * Check if warping is enabled (audio clips)
+   */
+  async getWarping(): Promise<boolean> {
+    const res = await this.client.query(
+      "/live/clip/get/warping",
+      this.trackId,
+      this.id
+    );
+    return res.args[2] as boolean;
+  }
+
+  /**
+   * Check if the clip has a groove applied
+   */
+  async getHasGroove(): Promise<boolean> {
+    const res = await this.client.query(
+      "/live/clip/get/has_groove",
+      this.trackId,
+      this.id
+    );
+    return res.args[2] as boolean;
+  }
+
+  /**
+   * Get legato mode (MIDI clips)
+   */
+  async getLegato(): Promise<boolean> {
+    const res = await this.client.query(
+      "/live/clip/get/legato",
+      this.trackId,
+      this.id
+    );
+    return res.args[2] as boolean;
+  }
+
+  /**
+   * Get the current playback position
+   */
+  async getPosition(): Promise<number> {
+    const res = await this.client.query(
+      "/live/clip/get/position",
+      this.trackId,
+      this.id
+    );
+    return res.args[2] as number;
+  }
+
+  /**
+   * Get the velocity amount (how much velocity affects volume)
+   */
+  async getVelocityAmount(): Promise<number> {
+    const res = await this.client.query(
+      "/live/clip/get/velocity_amount",
+      this.trackId,
+      this.id
+    );
+    return res.args[2] as number;
+  }
+
+  /**
+   * Get the start marker position
+   */
+  async getStartMarker(): Promise<number> {
+    const res = await this.client.query(
+      "/live/clip/get/start_marker",
+      this.trackId,
+      this.id
+    );
+    return res.args[2] as number;
+  }
+
+  /**
+   * Get the end marker position
+   */
+  async getEndMarker(): Promise<number> {
+    const res = await this.client.query(
+      "/live/clip/get/end_marker",
+      this.trackId,
+      this.id
+    );
+    return res.args[2] as number;
+  }
+
+  /**
+   * Get RAM mode (audio clips - whether to load into RAM)
+   */
+  async getRamMode(): Promise<boolean> {
+    const res = await this.client.query(
+      "/live/clip/get/ram_mode",
+      this.trackId,
+      this.id
+    );
+    return res.args[2] as boolean;
+  }
+
+  /**
+   * Get the launch quantization for this clip
+   */
+  async getLaunchQuantization(): Promise<LaunchQuantization> {
+    const res = await this.client.query(
+      "/live/clip/get/launch_quantization",
+      this.trackId,
+      this.id
+    );
+    return res.args[2] as LaunchQuantization;
+  }
+
+  /**
+   * Check if loop is enabled
+   */
+  async getLooping(): Promise<boolean> {
+    const res = await this.client.query(
+      "/live/clip/get/looping",
+      this.trackId,
+      this.id
+    );
+    return res.args[2] as boolean;
+  }
+
+  /**
+   * Get pitch coarse (semitones) for audio clips
+   */
+  async getPitchCoarse(): Promise<number> {
+    const res = await this.client.query(
+      "/live/clip/get/pitch_coarse",
+      this.trackId,
+      this.id
+    );
+    return res.args[2] as number;
+  }
+
+  /**
+   * Get pitch fine (cents) for audio clips
+   */
+  async getPitchFine(): Promise<number> {
+    const res = await this.client.query(
+      "/live/clip/get/pitch_fine",
+      this.trackId,
+      this.id
+    );
+    return res.args[2] as number;
+  }
+
   // ============ Setters ============
 
   async setName(name: string): Promise<void> {
@@ -283,6 +478,147 @@ export class Clip {
 
   async setPitchFine(cents: number): Promise<void> {
     this.client.send("/live/clip/set/pitch_fine", this.trackId, this.id, cents);
+  }
+
+  // ============ New Setters ============
+
+  /**
+   * Enable or disable warping (audio clips)
+   */
+  async setWarping(enabled: boolean): Promise<void> {
+    this.client.send(
+      "/live/clip/set/warping",
+      this.trackId,
+      this.id,
+      enabled ? 1 : 0
+    );
+  }
+
+  /**
+   * Set legato mode (MIDI clips)
+   */
+  async setLegato(enabled: boolean): Promise<void> {
+    this.client.send(
+      "/live/clip/set/legato",
+      this.trackId,
+      this.id,
+      enabled ? 1 : 0
+    );
+  }
+
+  /**
+   * Set the playback position
+   */
+  async setPosition(position: number): Promise<void> {
+    this.client.send(
+      "/live/clip/set/position",
+      this.trackId,
+      this.id,
+      position
+    );
+  }
+
+  /**
+   * Set the velocity amount
+   */
+  async setVelocityAmount(amount: number): Promise<void> {
+    this.client.send(
+      "/live/clip/set/velocity_amount",
+      this.trackId,
+      this.id,
+      amount
+    );
+  }
+
+  /**
+   * Set the start marker position
+   */
+  async setStartMarker(position: number): Promise<void> {
+    this.client.send(
+      "/live/clip/set/start_marker",
+      this.trackId,
+      this.id,
+      position
+    );
+  }
+
+  /**
+   * Set the end marker position
+   */
+  async setEndMarker(position: number): Promise<void> {
+    this.client.send(
+      "/live/clip/set/end_marker",
+      this.trackId,
+      this.id,
+      position
+    );
+  }
+
+  /**
+   * Set RAM mode (audio clips - whether to load into RAM)
+   */
+  async setRamMode(enabled: boolean): Promise<void> {
+    this.client.send(
+      "/live/clip/set/ram_mode",
+      this.trackId,
+      this.id,
+      enabled ? 1 : 0
+    );
+  }
+
+  /**
+   * Set the launch quantization for this clip
+   */
+  async setLaunchQuantization(quantization: LaunchQuantization): Promise<void> {
+    this.client.send(
+      "/live/clip/set/launch_quantization",
+      this.trackId,
+      this.id,
+      quantization
+    );
+  }
+
+  /**
+   * Enable or disable looping
+   */
+  async setLooping(enabled: boolean): Promise<void> {
+    this.client.send(
+      "/live/clip/set/looping",
+      this.trackId,
+      this.id,
+      enabled ? 1 : 0
+    );
+  }
+
+  // ============ Playing Position Listener ============
+
+  /**
+   * Start listening for playing position updates
+   * Note: You need to handle /live/clip/get/playing_position OSC messages
+   */
+  startListenPlayingPosition(): void {
+    if (!this.positionListening) {
+      this.client.send(
+        "/live/clip/start_listen/playing_position",
+        this.trackId,
+        this.id
+      );
+      this.positionListening = true;
+    }
+  }
+
+  /**
+   * Stop listening for playing position updates
+   */
+  stopListenPlayingPosition(): void {
+    if (this.positionListening) {
+      this.client.send(
+        "/live/clip/stop_listen/playing_position",
+        this.trackId,
+        this.id
+      );
+      this.positionListening = false;
+    }
   }
 
   // ============ MIDI Notes ============
@@ -364,5 +700,20 @@ export class Clip {
 
   duplicateLoop(): void {
     this.client.send("/live/clip/duplicate_loop", this.trackId, this.id);
+  }
+
+  // ============ Quantize ============
+
+  /**
+   * Quantize the clip's notes
+   */
+  quantize(gridSize: number, strength: number = 1.0): void {
+    this.client.send(
+      "/live/clip/quantize",
+      this.trackId,
+      this.id,
+      gridSize,
+      strength
+    );
   }
 }
