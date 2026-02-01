@@ -2,7 +2,7 @@
  * Multi-instance example: Control multiple Ableton instances
  */
 
-import { Ableton, createMultiple } from "../src/index.js";
+import { createMultiple } from "../src/index.js";
 
 const STUDIO_IP = "192.168.1.72"; // Streaming rig
 const LAPTOP_TAILSCALE = "100.80.245.114"; // Personal laptop
@@ -10,9 +10,9 @@ const LAPTOP_TAILSCALE = "100.80.245.114"; // Personal laptop
 async function main() {
   console.log("🎹 AbleNode Multi-Instance Example\n");
 
-  // Method 1: Create instances manually
-  const studio = new Ableton({ host: STUDIO_IP });
-  const laptop = new Ableton({ host: LAPTOP_TAILSCALE });
+  // Method 1: Create instances manually (commented out - using Method 2)
+  // const studio = new Ableton({ host: STUDIO_IP });
+  // const laptop = new Ableton({ host: LAPTOP_TAILSCALE });
 
   // Method 2: Use createMultiple helper
   const instances = createMultiple([

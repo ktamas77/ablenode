@@ -2,13 +2,21 @@
   "name": "ablenode",
   "version": "0.1.0",
   "description": "Control Ableton Live via AbletonOSC from Node.js/TypeScript",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "test": "tsx src/__tests__/basic.test.ts",
-    "example": "tsx examples/basic.ts"
+    "lint": "eslint src examples",
+    "lint:fix": "eslint src examples --fix",
+    "format": "prettier --write \"src/**/*.ts\" \"examples/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"examples/**/*.ts\"",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run typecheck && npm run lint",
+    "example": "tsx examples/basic.ts",
+    "example:multi": "tsx examples/multi-instance.ts",
+    "prepare": "husky"
   },
   "keywords": [
     "ableton",
@@ -16,18 +24,34 @@
     "osc",
     "music",
     "midi",
-    "daw"
+    "daw",
+    "abletonosc",
+    "typescript"
   ],
-  "author": "Squidcode",
+  "author": "ktamas77",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/squidcode/ablenode"
+    "url": "https://github.com/ktamas77/ablenode"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.2",
     "@types/node": "^22.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.54.0",
+    "@typescript-eslint/parser": "^8.54.0",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.8.1",
     "tsx": "^4.7.0",
     "typescript": "^5.3.0"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   },
   "engines": {
     "node": ">=18.0.0"

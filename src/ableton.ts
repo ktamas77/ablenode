@@ -8,6 +8,12 @@ import { EventEmitter } from "node:events";
 import { OSCClient, type OSCClientOptions, type OSCMessage } from "./osc.js";
 import { Song } from "./song.js";
 
+export interface Logger {
+  log: (...args: unknown[]) => void;
+  error: (...args: unknown[]) => void;
+  debug?: (...args: unknown[]) => void;
+}
+
 export interface AbletonOptions {
   /** Host IP address (default: localhost) */
   host?: string;
@@ -18,7 +24,7 @@ export interface AbletonOptions {
   /** Query timeout in ms (default: 5000) */
   timeout?: number;
   /** Enable debug logging */
-  logger?: Console;
+  logger?: Logger;
 }
 
 export interface AbletonEvents {
@@ -44,7 +50,7 @@ export interface AbletonEvents {
  */
 export class Ableton extends EventEmitter<AbletonEvents> {
   private client: OSCClient;
-  private logger?: Console;
+  private logger?: Logger;
   private _song: Song;
   private _connected = false;
 
@@ -74,7 +80,7 @@ export class Ableton extends EventEmitter<AbletonEvents> {
     });
 
     this.client.on("message", (msg: OSCMessage) => {
-      this.logger?.debug("[AbleNode] Received:", msg);
+      this.logger?.debug?.("[AbleNode] Received:", msg);
       this.emit("message", msg);
     });
   }

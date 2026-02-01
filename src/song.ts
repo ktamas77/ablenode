@@ -15,6 +15,7 @@ export interface SongState {
 
 export class Song {
   private client: OSCClient;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private listeners: Map<string, Set<(value: any) => void>> = new Map();
   private pollInterval: NodeJS.Timeout | null = null;
 
